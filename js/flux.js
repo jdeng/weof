@@ -30,19 +30,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
     if (msg.action == 'toggle')
       $f('#flux-panel').toggle();
   }
-
-  var scope = angular.element($f('#flux-panel > div > div')).scope();
-
-/*
-  if (msg.action == "export-ack") {
-    var result = msg.result;
-    if (scope) scope.files[result.data] = {name:result.name, blob:result.data};
-//      if (blob) URL.revokeObjectURL(blob);
-  }
-*/
-
-  if (scope) scope.$apply();
- });
+});
 
 function AppController($scope, $timeout, $route){
   $scope.feedController = new Flux.FeedController();

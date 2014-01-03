@@ -28,7 +28,8 @@
     }
   ],
   "web_accessible_resources" :[
-      "template/panel.html"
+    "template/panel.html",
+    "images/glyphicons-halflings.png"
   ],
   "minimum_chrome_version": "21.0.1180.57"
 }

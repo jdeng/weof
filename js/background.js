@@ -48,10 +48,6 @@ function reconstruct(obj, server) {
       var n = obj.a[k];
       if (obj.t.toLowerCase() == 'a' && k.toLowerCase() == 'href')
         n = absoluteUrl(n, server);
-
-//                      if (obj.t.toLowerCase() == 'img' && k.toLowerCase() == 'src' && cacheImage)
-//                              n = "https://panflux.com/cache/" + encodeURIComponent('http://' + server) + '/' + encodeURIComponent(url);
-
         e += (" " + k + "=\"" + n + "\"");
     }
   }
@@ -199,16 +195,5 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
     initDatabase();
   }
-
-  else if (message.action == "task") {
-    console.log(JSON.stringify(message));
-    if (message.data) {
-      tasks[sender.tab.id] = message.data;
-    }
-    else {
-      sendResponse({action: 'task', result: tasks[sender.tab.id]});
-    }
-  }
-
 });
 
