@@ -141,7 +141,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       }
 
       var msg = {action:'list-ack', result: {name: name, total: total, offset: offset, count: count, items: items}};
-      console.log('reply: ' + JSON.stringify(msg));
+//      console.log('reply: ' + JSON.stringify(msg));
       chrome.tabs.sendMessage(sender.tab.id, msg);
     };
   }
