@@ -6,7 +6,8 @@ Offline tweets
 安装
 =====
 
-下载zip包:https://github.com/jdeng/weof/archive/master.zip，解开，然后在chrome扩展里面允许开发者模式，导进去就行了
+下载zip包:https://github.com/jdeng/weof/archive/master.zip 
+解开，然后在chrome扩展里面允许开发者模式，导进去就行了
 
 使用
 =====
