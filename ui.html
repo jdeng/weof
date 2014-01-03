@@ -1,0 +1,110 @@
+<html ng-app='messageApp' ng-csp>
+  <head>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/angular-1.2.6.min.js"></script>
+    <script src="js/angular-sanitize-1.2.6.min.js"></script>
+    <script src="js/angular-route-1.2.6.min.js"></script>
+    <script src="js/ui-bootstrap-tpls-0.9.0.js"></script>
+    <script src="js/ui.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/angular-csp.css">
+
+    <style>
+      .sidebar { overflow-y:auto; padding:15px;  max-width:100%;}
+      .list-panel { padding:5px; width:100%; }
+      .nav-panel { padding:5px; max-height:95%; }
+      .container { height:95%; }
+      .message-text { margin:5px;}
+
+      /* tweets */
+      .tweet { position: relative; min-height: 51px; padding: 9px 12px; border-bottom: 1px solid #E8E8E8; }
+      .tweet-author { padding-left: 58px; }
+      .tweet-permlink { display:inline-block; margin:0; padding-top:2px; }
+      .tweet-avatar { border-radius: 5px 5px 5px 5px; height: 48px; width: 48px;left: 2px; top: 2px; position: absolute; }
+      .tweet-content { margin-left: 58px; padding-top: 5px; font-size: 14px; word-wrap: break-word; }
+      .tweet-content em { font-family: Arial,Helvetica,sans-serif; font-style: normal; font-weight: normal; line-height: 22px; }
+      .tweet-ref { padding: 6px; margin: 8px 10px 6px 6px; font-size: 12px; min-height: 32px; color: #777777; border: 1px solid #E8E8E8; border-radius: 4px 4px 4px 4px; background: transparent; background-color: #F8F8F8; }
+      .tweet-ref em { line-height: 18px; }
+      .tweet-thumbnail {} 
+    </style>
+  </head>
+  <body>
+    <!-- tweet template -->
+    <script id="tweet.html" type="text/ng-template">
+      <div class="tweet"> 
+        <div class="tweet-author" ng-hide="currentClass == 'sent'">
+          <a target="_blank" ng-href="{{msg.parts[0].x_author.a_link}}">
+            <img class="tweet-avatar" ng-src="{{msg.parts[0].x_author.avatar}}"></img> @<strong style="padding-left:2px;"> {{msg.parts[0].x_author.nickname}}</strong>
+          </a>
+        </div> 
+        <div class="tweet-content">
+          <p ng-bind-html="msg.parts[0].html"> </p>
+          <ul class="list-unstyled">
+            <li ng-repeat="pic in msg.parts[0].x_pictures">
+                <a href><img class="tweet-thumbnail" ng-src="{{pic.url}}" ng-click="SwitchPicture(pic)"></img></a>
+            </li>
+          </ul>
+          <div class="tweet-ref" ng-hide="!msg.parts[1]">
+            <div>
+              <a target="_blank" ng-href="{{msg.parts[1].x_author.a_link}}">
+                @<strong style="padding-left:2px;"> {{msg.parts[1].x_author.nickname}}</strong>
+              </a>
+            </div> 
+            <p ng-bind-html="msg.parts[1].html"> </p>
+            <ul class="list-unstyled">
+              <li ng-repeat="rpic in msg.parts[1].x_pictures">
+                <a href><img class="tweet-thumbnail" ng-src="{{rpic.url}}" ng-click="SwitchPicture(rpic)"></img></a>
+              </li>
+            </ul>
+            <p class="tweet-permlink"><a ng-href="{{msg.parts[1].a_permlink}}"> {{msg.parts[1].timestamp *1000| date:'yyyy/MM/dd HH:mm'}}</a></p>
+          </div>
+          <p class="tweet-permlink"><a ng-href="{{msg.parts[0].a_permlink}}"> {{msg.parts[0].timestamp *1000| date:'yyyy/MM/dd HH:mm'}}</a></p>
+        </div> 
+      </div> 
+    </script>
+
+    <div id='tweet-container' class="container" ng-controller="ListController">
+      <div>
+        <div class="col-md-3">
+          <div class="list-panel"> <ol class="breadcrumb" style="background-color:#efefef;"> <li><strong>Tweets</strong></li> </ol> </div>
+
+          <div class="nav-panel sidebar">
+            <div class="nav" class="panel panel-default">
+              <div class="panel-heading"> <strong>Weibo</strong> </div>
+                <ul class="list-group nav nav-pills nav-stacked">
+                  <li ng-repeat="(key, clazz) in classes" ng-class="{acitve: currentClass == key }" >
+                      <a ng-href="#/list/{{key}}/1"><span class="badge pull-right">{{clazz.total}}</span> {{key}}</a> 
+                  </li>
+<!--
+                  <a ng-hide="!! clazz.url" ng-href="{{clazz.url}}" download="{{clazz.filename}}" title="{{clazz.filename}}" ng-click="revokeBlob()">{{clazz.filename}}</a>
+                  <a ng-hide="!! clazz.url" href ng-click="exportClass()">Download</a>
+-->
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-9" >
+          <div class="list-panel">
+            <ol class="breadcrumb">
+              <li><strong>Weibo</strong></li>
+              <li><a href ng-href="#/list/{{currentClass}}/1"><strong>{{currentClass}}</strong></a></li>
+              <span class="pull-right" style="display:inline-block; margin:-28px -14px 0 0"> 
+                <pagination previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" total-items="totalMessages" page="currentPage" items-per-page="messagesPerPage" class="pagination-small" boundary-links="true" max-size="3" num-pages="totalPages" on-select-page="go(page)" ></pagination>
+              </span>
+            </ol>
+          </div>
+
+          <div>
+            <div ng-repeat="message in messages track by $index">
+              <tweet msg="message"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+

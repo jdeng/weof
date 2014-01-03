@@ -1,0 +1,72 @@
+#flux-panel {position: fixed; z-index: 9999; top: 0; right: 0; bottom: 0; left: 0; background-color: #F8F8F8; opacity: .95; overflow-x:hidden;}
+#flux-container {position: absolute; z-index: 100002; top: 0; left: 0; background-color: transparent; opacity: 1; width: 100%; font-family: Helvetica,Arial,sans-serif; font-size: 13px; height:800px;}
+.flux-noscroll { overflow-y:auto; }
+
+/* reset */
+#flux-container * { list-style: none outside none; margin: 0; padding: 0; text-align: left; border:0; cursor:auto; color: #000000;}
+#flux-container a { text-decoration: none; color: #404040; cursor: pointer;}
+#flux-container .clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+
+#flux-container .flux-control-panel{ background-color: #F9F9F9; }
+
+/* toolbar */
+#flux-container .flux-toolbar { min-height: 42px; }
+#flux-container .flux-status { position: relative;} 
+
+#flux-container .flux-toolbar .flux-nav { margin-bottom: 2px; float: left; position: relative;}
+#flux-container .flux-toolbar .flux-nav-title { width: 195px; }
+#flux-container .flux-toolbar .flux-nav-title a:before { content: url("https://panflux.com/i/arrow_right.png");}
+#flux-container .flux-toolbar .flux-nav-title a.flux-expanded:before { content: url("https://panflux.com/i/arrow_down.png");}
+#flux-container .flux-toolbar .flux-nav.pull-right { float: right; margin-right: 2px; }
+#flux-container .flux-toolbar .flux-nav.pull-right .dropdown-menu { left: auto; right: 0; }
+#flux-container .flux-toolbar .flux-nav > a { margin-left:3px; margin-top:4px; padding: 12px 8px 8px 8px; line-height: 16px; font-weight: bold; display:block; }
+
+#flux-container .flux-toolbar .dropdown-menu { background-clip: padding-box; background-color: #FFFFFF; border-color: rgba(0, 0, 0, 0.2); border-radius: 0 0 5px 5px; border-style: solid; border-width: 1px; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); display: none; float: left; left: 0; margin: 0; max-width: 220px; min-width: 160px; padding: 4px 0; position: absolute; top: 100%; z-index: 1000; border-radius: 4px 4px 4px 4px; text-align:left; }
+#flux-container .flux-toolbar .flux-nav .dropdown-menu .divider { background-color: #E5E5E5; border-bottom: 1px solid #FFFFFF; height: 1px; margin: 5px 1px; overflow: hidden; }
+#flux-container .flux-toolbar .flux-nav .dropdown-menu a { clear: both; color: #555555; display: block; font-weight: normal; line-height: 18px; padding: 3px 15px; white-space: nowrap; }
+#flux-container .flux-toolbar li.dropdown:hover ul.dropdown-menu { display: block;}
+#flux-container .flux-toolbar li.dropdown { float: left; position: relative; line-height: 18px; text-align:center;}
+#flux-container .flux-toolbar li.dropdown > a { border-radius: 2px 2px 2px 2px; margin: 3px; margin-top:6px; padding: 8px 16px 8px 16px; line-height: 14px; display:block; background-color: #E8E8E8; width:80px; }
+#flux-container b.caret { float:right; display:inline-block; width: 10px; height: 10px; opacity: 1; background: url("https://panflux.com/i/arrow_down.png") no-repeat scroll 3px 3px transparent; }
+#flux-container .flux-toolbar li.dropdown.open .dropdown-menu { display: block; }
+#flux-container .flux-toolbar li.dropdown a:hover { background-color:#0088CC;}
+
+#flux-container .flux-feed-repost, #flux-container .flux-feed-commented { display: inline-block; vertical-align: bottom; height: 14px; width: 14px; background-image: url("https://panflux.com/i/glyphicons-halflings.png"); }
+
+#flux-container .flux-feed-commented { background-position: -240px -120px; }
+#flux-container .flux-feed-repost { background-position: -336px -120px; }
+
+/* disable caret */
+#flux-container .flux-toolbar .dropdown-toggle:after {display:none;}
+
+
+#flux-container .flux-content-outer {  position: static; margin-left: 242px; margin-right:0px; min-height: 400px; }
+#flux-container .flux-content { margin-left:10px; background-color: rgba(243, 243, 243, 0.85); border-top: 1px solid #88888; }
+#flux-container .flux-content input[type=checkbox].flux-checked { background-color: rgba(88, 88, 243, 0.85); }
+
+#flux-container .flux-feed-header { width:184px; display:inline-block;position: relative;}
+#flux-container .flux-feed-footer { float:right; margin-right:2px;}
+
+#flux-container .flux-feed-content { vertical-align:top; display:inline-block; max-width:920px; max-height: 18px; overflow:hidden; position: relative;}
+#flux-container .flux-feed-content.flux-expanded { max-height: 450px; overflow-y:auto; }
+#flux-container .flux-feed-view { position:relative; margin:4px 0 4px 0; padding:4px 18px 4px 4px; display:block; background-color:#FEFEFE; border-radius:4px; }
+#flux-container .flux-feed-view-link { position:absolute; display:block; right:4px; top: 2px; width:14px; height:14px; background: url("https://panflux.com/i/glyphicons-halflings.png") -120px -72px; }
+#flux-container .flux-feed-view-ref { margin: 5px 20px 5px 20px; background-color:#F8F8F8; border-radius:4px; font-size:12px; }
+#flux-container .flux-feed-preview span { cursor: pointer; }
+
+#flux-container .flux-content li.flux-feed { line-height: 18px; padding:2px 2px 0 2px; border-bottom: 1px solid #E5E5E5; }
+#flux-container .flux-content li.flux-feed:hover { background-color: #E5E5E5; }
+#flux-container .flux-content li.flux-feed .flux-feed-comment { display: inline-block; position:absolute; right:3px; top:-2px; opacity:0; margin:0; padding:0; height: 26px; width:26px;}
+#flux-container .flux-feed { margin:0; padding:0; }
+#flux-container .flux-content li.flux-feed:hover .flux-feed-comment { opacity:0.9; z-index:1000003; }
+#flux-container .flux-content li.flux-feed .flux-like { opacity:0.9; z-index:1000003; }
+#flux-container .flux-content li.flux-feed .flux-dislike { opacity:0.9; z-index:1000003; }
+
+#flux-container li.flux-feed .flux-checked  { background: url("https://panflux.com/i/checkmark.png") no-repeat scroll -2px -3px transparent;}
+#flux-container .flux-toolbar .flux-disabled { text-decoration: blink; font-style: italic;}
+
+#flux-container .dropdown-menu .flux-checkable-menu:before { display:inline-block; width:16px; height:16px; content: ""; }
+#flux-container .dropdown-menu .flux-checkable-menu.flux-checked:before { background: url("https://panflux.com/i/checkmark.png") no-repeat scroll -4px 1px transparent; }
+
+a#close-me { border-bottom: 1px solid #333333; color: #181818; font-size: 14px; font-weight: bold; height: 32px; left: 0; line-height: 1em; padding: 10px 0 0; position: fixed; right: 0; text-align: center; text-decoration: none; top: 0; z-index: 10001; background-color: #68A8FD; }
+a#close-me:hover { background-color: #3570BD; }

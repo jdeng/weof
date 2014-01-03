@@ -1,0 +1,49 @@
+<div id="flux-container">
+    <div style="height:40px;"> <a href ng-click="closePanel()" id="close-me">Click to Close</a> </div>
+
+    <div class="flux-header-wrapper clearfix">
+        <div class="flux-control-panel">
+            <div class="flux-toolbar">
+            	<ul class="flux-nav" >
+<!--                <li class="dropdown"><a href class="dropdown-toggle save-all" style="font-weight:bold;color:green;" title="Save Feeds Page by Page"> Backup </a></li> -->
+                <li class="dropdown"><a href ng-click="refresh()" class="dropdown-toggle" title="Refresh"> Refresh </a></li>
+                <li class="dropdown"><a href ng-hide="!hasPrevPage" ng-click="prevPage()" class="dropdown-toggle prev-page" title="Go to Previous Page"> Prev Page </a></li>
+                <li class="dropdown"><a href ng-hide="!hasNextPage" ng-click="nextPage()" class="dropdown-toggle next-page" title="Go to Next Page"> Next Page </a></li>
+                <li class="dropdown"><a href class="dropdown-toggle load" ng-click="loadFeeds()" title="Load More Feeds"> Backup </a></li>
+                <li class="dropdown"><a href ng-click="saveFeeds()" class="dropdown-toggle" title="Save Current Page"> Save</a></li>
+            	</ul>
+            	<ul class="flux-nav pull-right" >
+<!--                <li class="dropdown"><a href ng-click="resetDatabase()" class="dropdown-toggle" title="Reset"> Reset </a></li> -->
+                <li class="dropdown"><a href ng-click="openUI()" class="dropdown-toggle" title="Open UI">Open UI</a></li>
+              </ul>
+            </div>
+            <div class="alert alert-info" style="padding:5px; margin:5px;">{{status}}</div>
+        </div>
+    </div>
+
+    <div class="flux-content-wrapper" style="border-top:1px solid #A8A8A8;">
+      <div id="flux-feed-panel" class="flux-content">
+
+<div ng-repeat="feed in feeds">
+  <li class="flux-feed" flux-feed-id="{{feed.mid}}">
+    <span class="flux-feed-header" >
+ 	    <span class="flux-feed-status" style="display:inline-block;width:18px; height:16px; "></span>
+        	<a title="{{feed.parts[0].x_author.nickname}}" style="vertical-align:bottom;" target="_blank" href="{{feed.parts[0].x_author.link}}">
+            <img style="border-radius:2px; margin:0; padding:0; width:16px; height:16px; vertical-align:bottom;" src="{{feed.parts[0].x_author.avatar}}"></img>
+		        <span style="margin-left:2px; color: #101010; vertical-align:top; max-height:18px; max-width:120px; display:inline-block; overflow:hidden;"> @{{feed.parts[0].x_author.nickname}} </span>
+	        </a>
+    </span>
+
+    <span class="flux-feed-content" > {{feed.parts[0].text}} </span>
+
+    <span class="flux-feed-footer">
+	    <span style="font-size:12px; display:inline-block; min-width:30px;padding-right:3px; text-align:right;">{{feed.parts[0].reposts}} <i title="{{feed.reposts}} Reposts" class="flux-feed-repost"></i></span>
+	    <span style="font-size:12px; display:inline-block; min-width:40px; padding-right:8px;text-align:right;">{{feed.parts[0].comments}} <i title="{{feed.comments}} Comments" class="flux-feed-commented"></i></span>
+	    <span style="font-size:13px; display:inline-block; width:72px;">{{feed.parts[0].timestamp*1000 | date:'yyyy/MM/dd'}}</span>
+    </span>
+  </li>
+</div>
+
+        </div>
+    </div>
+</div>'
