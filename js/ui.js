@@ -91,11 +91,6 @@ function ListController($scope, $route, $routeParams, $location) {
   };
 */
 
-  $scope.absoluteUrl = function(url, server) {
-    if (url && url[0] == '/') return 'http://' + server + url;
-    else return url;
-  };
-
   $scope.go = function(page) {
     if (typeof page == "undefined") page = $scope.currentPage;
     var path = "/list/" + $scope.currentClass + "/" + page;

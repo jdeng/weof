@@ -1,5 +1,4 @@
 var db = null;
-var tasks = {};
 var blob = null;
 
 function initDatabase() {
@@ -73,6 +72,7 @@ function reconstruct(obj, server) {
 initDatabase();
 
 // notify of page refreshes
+/*
 chrome.extension.onConnect.addListener(function(port) {
   port.onMessage.addListener(function (msg) {
     if (msg.action === 'register') {
@@ -85,6 +85,7 @@ chrome.extension.onConnect.addListener(function(port) {
     }
   });
 });
+*/
 
 chrome.browserAction.onClicked.addListener(function(tab) {
   if (tab.url && tab.url.indexOf('weibo.com') >= 0) {
