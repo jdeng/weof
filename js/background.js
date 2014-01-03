@@ -172,7 +172,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       if (items.length) {
         var blob = new Blob(blobs, {type : 'application/octet-stream'});
         console.log(blob.size);
-        chrome.tabs.sendMessage(sender.tab.id, { action:'export-ack', result: {data:URL.createObjectURL(blob), name: message.name + "-" + Date.now() + ".box"}});
+        chrome.tabs.sendMessage(sender.tab.id, { action:'export-ack', result: {data:URL.createObjectURL(blob), name:message.name, filename: message.name + "-" + Date.now() + ".box"}});
       }
     };
   }

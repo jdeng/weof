@@ -91,6 +91,10 @@
             <ol class="breadcrumb">
               <li><strong>Weibo</strong></li>
               <li><a href ng-href="#/list/{{currentClass}}/1"><strong>{{currentClass}}</strong></a></li>
+
+              <span> (<a href ng-hide="!classes[currentClass] || classes[currentClass].url" ng-click="exportFeeds(currentClass)">download</a>
+                <a ng-href="{{classes[currentClass].url}}" ng-hide="!classes[currentClass] || !classes[currentClass].url" download="{{classes[currentClass].filename}}" title="{{classes[currentClass].filename}}" ng-click="revokeBlob(currentClass)"> {{classes[currentClass].filename}} </a>)</span>
+
               <span class="pull-right" style="display:inline-block; margin:-28px -14px 0 0"> 
                 <pagination previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" total-items="totalMessages" page="currentPage" items-per-page="messagesPerPage" class="pagination-small" boundary-links="true" max-size="3" num-pages="totalPages" on-select-page="go(page)" ></pagination>
               </span>

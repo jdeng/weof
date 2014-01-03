@@ -6,7 +6,10 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
 
   if (msg.action == "export-ack") {
     var result = msg.result;
-    if (scope) scope.classes[result.name].url = result.data;
+    if (scope) {
+      scope.classes[result.name].url = result.data;
+      scope.classes[result.name].filename = result.filename;
+    }
   }
   else if (msg.action == "list-ack") {
     var result = msg.result;
@@ -59,7 +62,7 @@ App.directive('tweet', function($compile) {
   };
 });
 
-function ListController($scope, $route, $routeParams, $location) {
+function ListController($scope, $route, $routeParams, $location, $timeout) {
   $scope.currentPage = 1;
   $scope.messagesPerPage = 28;
   $scope.totalMessages = 0;
@@ -82,6 +85,7 @@ function ListController($scope, $route, $routeParams, $location) {
   };
 
   $scope.exportFeeds = function(name) {
+    console.log('exportFeeds:' + name);
     chrome.extension.sendMessage({action:'export', name: name});
   };
 
