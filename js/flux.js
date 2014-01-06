@@ -512,12 +512,17 @@ Controller.prototype.collectMessages = function() {
 }
 
 Controller.prototype.collectFeeds = function() {
-  if (this.type() == 'private') {
+  var type = this.type();
+  if (type == 'private') {
     this.collectMessages();
     return;
   }
 
 	var container = $('.WB_feed[node-type="feed_list"]');
+	if (! container.length) {
+    container = $('.WB_feed[node-type="favorites_list"]');
+    type = 'other';
+  }
 	if (! container.length) return 0;
 
 	var defaultAuthor = this.currentAuthor();
@@ -555,7 +560,7 @@ Controller.prototype.collectFeeds = function() {
 	        author.name = author.link;
     	    author.avatar = au.attr('src');
 		} 
-    else if (_this.type() != "inbox") {
+    else if (type != "inbox") {
 			    part.x_author = defaultAuthor;
 	  }
   
@@ -628,7 +633,7 @@ Controller.prototype.collectFeeds = function() {
     feed.from = part.x_author.id;
     feed.ext = {"server": "weibo.com"};
 
-    feed.type = _this.type();
+    feed.type = type;
 //    console.log('new feed: ' + JSON.stringify(feed, null, 2));
 
 		_this._feeds.push(feed);
