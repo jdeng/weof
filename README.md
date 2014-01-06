@@ -20,7 +20,8 @@ panel页面有四个按钮
  * Open UI会打开ui界面
  * Backup 会从当前页面开始往后翻页备份。中间可能因为各种原因停止，刷新一下那个页面再来就会接着来。如果中间想停止也可以刷新一下页面就可以了。。要判断是不是在正常工作可以看地址栏有没有变化，页面在不在滚动，或者打开个UI页面刷新一下看看数据条数有没有在涨。。。
 
-从indexedDB导出数据的javascript有了不过还没有界面。。。
+WebStore链接：https://chrome.google.com/webstore/detail/we-offline/mbicilimmgfiejhlhbcekehipiadhoeb
+
 
 
  
