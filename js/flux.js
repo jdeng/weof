@@ -521,7 +521,7 @@ Controller.prototype.collectFeeds = function() {
 	var container = $('.WB_feed[node-type="feed_list"]');
 	if (! container.length) {
     container = $('.WB_feed[node-type="favorites_list"]');
-    type = 'other';
+    type = 'favorite';
   }
 	if (! container.length) return 0;
 

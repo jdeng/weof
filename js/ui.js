@@ -15,8 +15,15 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
     var result = msg.result;
     if (scope){
       if (typeof result.items != "undefined" && result.items.length) {
-        scope.currentClass = result.name;
-        scope.authors = scope.classes[result.name].authors;
+        if (scope.currentClass != result.name) {
+          scope.currentClass = result.name;
+          scope.authors = [];
+          for (var key in scope.classes[result.name].authors) {
+            var author = scope.classes[result.name].authors[key];
+            author.selected = true;
+            scope.authors.push(author);
+         }
+        }
 //        console.log(JSON.stringify(scope.classes[result.name]));
         scope.totalMessages = result.total;
         scope.totalPages = Math.ceil(scope.totalMessages / scope.messagesPerPage);
@@ -76,7 +83,7 @@ function ListController($scope, $route, $routeParams, $location, $timeout) {
 
   $scope.currentClass = null;
   $scope.classes = {};
-  $scope.authors = {};
+  $scope.authors = [];
 
   $scope.revokeBlob = function(key) {
     var clz = $scope.classes[key];
@@ -108,7 +115,7 @@ function ListController($scope, $route, $routeParams, $location, $timeout) {
     $location.path(path);
   };
 
-  $scope.gotoPage = function(page) {
+  $scope.gotoPage = function(clazz, page, authors) {
     if (typeof page == "undefined") page = 1;
 
     var count = $scope.messagesPerPage;
@@ -116,7 +123,7 @@ function ListController($scope, $route, $routeParams, $location, $timeout) {
 
 //    $scope.currentClass = clazz;
     $scope.currentPage = page;
-    chrome.extension.sendMessage({action:'list', name: $scope.currentClass, offset: offset, count: count});
+    chrome.extension.sendMessage({action:'list', name: clazz, offset: offset, count: count, authors:authors});
   };
 
   $scope.switchPicture = function(pic) {
@@ -128,31 +135,33 @@ function ListController($scope, $route, $routeParams, $location, $timeout) {
       pic.url = pic.url.replace(/\/bmiddle\//, '/thumbnail/');
   };
 
-  $scope.objectLength = function(obj) {
-    if (!obj) return 0;
-
-    var count =0;
-    for(var key in obj) {
-      if(obj.hasOwnProperty(key)) ++count;
-    }
-    return count;
-  };
-
-  $scope.updateAuthors = function() {
-  };
-
   $scope.$on('$routeChangeSuccess', function(event, current) {
     var delay = false;
     if (typeof $scope.classes.inbox == 'undefined') {
       chrome.extension.sendMessage({action:'summary'});
       delay = true;
     }
+
+    var authors = [];
+    for (var a in $scope.authors) {
+      if ($scope.authors[a].selected) authors.push($scope.authors[a].id);
+    }
+
     if (typeof $routeParams.clazz != 'undefined') {
-      $scope.currentClass = $routeParams.clazz;
+      if ($routeParams.clazz != $scope.currentClass) authors = [];
       $timeout(function() { 
-        $scope.gotoPage($routeParams.page);
+        $scope.gotoPage($routeParams.clazz, $routeParams.page, authors);
       }, delay? 3000: 0);
     }
   });
+
+  $scope.$watch('authors|filter:{selected:true}', function (nv) {
+    var authors = nv.map(function (author) {
+      return author.id;
+    });
+//    console.log(JSON.stringify(authors));
+    if ($scope.currentClass != null)
+      $scope.gotoPage($scope.currentClass, 1, authors);
+  }, true);
 }
 

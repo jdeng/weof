@@ -2,7 +2,7 @@ var db = null;
 var blob = null;
 
 function initDatabase() {
-  var req = indexedDB.open("weof", 1);
+  var req = indexedDB.open("weof", 2);
   req.onsuccess = function(e) {
     db = e.target.result;
     console.log("db = " + JSON.stringify(db));
@@ -14,23 +14,14 @@ function initDatabase() {
     e.target.transaction.onerror = function(e) { console.log(e); };
 
     console.log("creating stores");
-    if(db.objectStoreNames.contains("inbox")) db.deleteObjectStore("inbox");
-    if(db.objectStoreNames.contains("sent")) db.deleteObjectStore("sent");
-    if(db.objectStoreNames.contains("other")) db.deleteObjectStore("other");
-    if(db.objectStoreNames.contains("private")) db.deleteObjectStore("private");
 
-    var store = null;
-    store = db.createObjectStore("inbox", {keyPath: "mid"});
-    store.createIndex("by_timestamp", "timestamp");
-
-    store = db.createObjectStore("sent", {keyPath: "mid"});
-    store.createIndex("by_timestamp", "timestamp");
-
-    store = db.createObjectStore("other", {keyPath: "mid"});
-    store.createIndex("by_timestamp", "timestamp");
-
-    store = db.createObjectStore("private", {keyPath: "mid"});
-    store.createIndex("by_timestamp", "timestamp");
+    var stores = ["inbox", "sent", "other", "private" , "favorite"];
+    stores.forEach(function(name) {
+      if(! db.objectStoreNames.contains(name)) { // db.deleteObjectStore(name);
+        var store = db.createObjectStore(name, {keyPath: "mid"});
+        store.createIndex("by_timestamp", "timestamp");
+      }
+    });
   };
 };
 
@@ -107,16 +98,15 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   if(message.action == "save") {
     var feed = JSON.parse(message.data);
-    var store = db.transaction([feed.type], "readwrite").objectStore(feed.type);
 
+    var store = db.transaction([feed.type], "readwrite").objectStore(feed.type);
     var req = store.put(feed);
+    
     req.onsuccess = function(e) {};
     req.onerror = function(e) { console.log(e); };
     sendResponse({action: 'save', result: "ok" });
   }
   else if (message.action == "list") {
-    console.log(message.data);
-
     var items = [];
     var xauthors = {};
 
@@ -127,6 +117,16 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     var authors = message.authors;
     var total = 0;
 
+    var hasAuthors = false;
+    if (authors && authors.length) {
+      console.log(JSON.stringify(authors));
+      var as = {};
+      authors.forEach(function(name) { as[name] = true; });
+      authors = as;
+      hasAuthors = true;
+    }
+
+    console.log("opening " + name);
     var tx = db.transaction([name], "readonly");
     var req = tx.objectStore(name).index('by_timestamp').openCursor(null, 'prev');
     req.onerror = function(e) { console.log(e); };
@@ -140,7 +140,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
             else xauthors[author.id] = {id: author.id, name: author.nickname, count: 1};
           }
         }
-        else if (authors && !authors[author.id]) {
+        else if (hasAuthors && !authors[author.id]) {
+//          console.log('skipping' + author.nickname);
           cur.continue();
           return;
         }

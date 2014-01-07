@@ -99,9 +99,9 @@
                 <pagination previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" total-items="totalMessages" page="currentPage" items-per-page="messagesPerPage" class="pagination-small" boundary-links="true" max-size="3" num-pages="totalPages" on-select-page="go(page)" ></pagination>
               </span>
             </ol>
-            <div style="margin-top:-5px; padding: 0px 10px 10px 10px;" ng-hide="objectLength(authors)<=1">
-              <label class="checkbox-inline" ng-repeat="(id, author) in authors">
-                <input type="checkbox" id="author-{{author.id}}" value="{{author.id}}" checked="true">{{author.name}}({{author.count}})</label> 
+            <div style="margin-top:-5px; padding: 0px 10px 10px 10px;" ng-hide="authors.length <=1">
+              <label class="checkbox-inline" ng-repeat="author in authors">
+                <input type="checkbox" id="author-{{author.id}}" value="{{author.id}}" ng-model="author.selected" checked="true">{{author.name}}({{author.count}})</label> 
             </div>
           </div>
 
