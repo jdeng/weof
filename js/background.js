@@ -39,6 +39,15 @@ function absoluteUrl(url, server) {
   else return url;
 };
 
+function escapeHtml(unsafe) {
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+}
+
 function reconstruct(obj, server) {
   if (!obj || ! obj.t) return null;
   var e = "<" + obj.t + " ";
@@ -60,7 +69,7 @@ function reconstruct(obj, server) {
         var ec = reconstruct(obj.c[i], server);
         if(ec) e += ec;
       } else {
-        e += child;
+        e += escapeHtml(child);
       }
     }
   }
@@ -109,10 +118,13 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     console.log(message.data);
 
     var items = [];
+    var xauthors = {};
+
     var name = message.name;
     var offset = message.offset || 0;
     var count = message.count || -1;
     var countOnly = message.countOnly || false;
+    var authors = message.authors;
     var total = 0;
 
     var tx = db.transaction([name], "readonly");
@@ -121,6 +133,18 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     req.onsuccess = function(e) { 
       var cur = e.target.result;
       if (cur) {
+        var author = cur.value.parts[0].x_author;
+        if (countOnly) {
+          if (name != 'inbox') {
+            if (author.id in xauthors) xauthors[author.id].count ++;
+            else xauthors[author.id] = {id: author.id, name: author.nickname, count: 1};
+          }
+        }
+        else if (authors && !authors[author.id]) {
+          cur.continue();
+          return;
+        }
+
         if(!countOnly && total >= offset) {
           if (count < 0 || total < offset +count)
             items.push(cur.value);
@@ -140,7 +164,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         }
       }
 
-      var msg = {action:'list-ack', result: {name: name, total: total, offset: offset, count: count, items: items}};
+      var msg = {action:'list-ack', result: {name: name, total: total, offset: offset, count: count, items: items, authors: xauthors}};
 //      console.log('reply: ' + JSON.stringify(msg));
       chrome.tabs.sendMessage(sender.tab.id, msg);
     };

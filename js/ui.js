@@ -14,12 +14,17 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
   else if (msg.action == "list-ack") {
     var result = msg.result;
     if (scope){
-      scope.classes[result.name] = result;
       if (typeof result.items != "undefined" && result.items.length) {
         scope.currentClass = result.name;
+        scope.authors = scope.classes[result.name].authors;
+//        console.log(JSON.stringify(scope.classes[result.name]));
         scope.totalMessages = result.total;
         scope.totalPages = Math.ceil(scope.totalMessages / scope.messagesPerPage);
         scope.messages = result.items;
+      }
+      else {
+        scope.classes[result.name] = result;
+//        console.log(JSON.stringify(result));
       }
     }
   }
@@ -27,8 +32,9 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
     var result = msg.result;
     if (scope) scope.classes = result;
     for (var name in result) {
-      if (! result.hasOwnProperty(name)) continue;
-      chrome.extension.sendMessage({action:'list', name: name, countOnly:true});
+      if (result.hasOwnProperty(name)) {
+        chrome.extension.sendMessage({action:'list', name: name, countOnly:true});
+      }
     }
   }
 
@@ -70,6 +76,7 @@ function ListController($scope, $route, $routeParams, $location, $timeout) {
 
   $scope.currentClass = null;
   $scope.classes = {};
+  $scope.authors = {};
 
   $scope.revokeBlob = function(key) {
     var clz = $scope.classes[key];
@@ -121,11 +128,30 @@ function ListController($scope, $route, $routeParams, $location, $timeout) {
       pic.url = pic.url.replace(/\/bmiddle\//, '/thumbnail/');
   };
 
+  $scope.objectLength = function(obj) {
+    if (!obj) return 0;
+
+    var count =0;
+    for(var key in obj) {
+      if(obj.hasOwnProperty(key)) ++count;
+    }
+    return count;
+  };
+
+  $scope.updateAuthors = function() {
+  };
+
   $scope.$on('$routeChangeSuccess', function(event, current) {
-    chrome.extension.sendMessage({action:'summary'});
+    var delay = false;
+    if (typeof $scope.classes.inbox == 'undefined') {
+      chrome.extension.sendMessage({action:'summary'});
+      delay = true;
+    }
     if (typeof $routeParams.clazz != 'undefined') {
       $scope.currentClass = $routeParams.clazz;
-      $scope.gotoPage($routeParams.page);
+      $timeout(function() { 
+        $scope.gotoPage($routeParams.page);
+      }, delay? 3000: 0);
     }
   });
 }
