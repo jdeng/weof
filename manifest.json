@@ -1,6 +1,6 @@
 {
   "name": "We Offline",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Offline tweets.",
   "background": {
     "page": "background.html"
@@ -28,7 +28,8 @@
   ],
   "web_accessible_resources" :[
     "template/panel.html",
-    "images/glyphicons-halflings.png"
+    "images/glyphicons-halflings.png",
+    "images/bg.png"
   ],
   "minimum_chrome_version": "21.0.1180.57"
 }
