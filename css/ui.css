@@ -1,0 +1,2 @@
+body { padding-top: 39px; color: #000; background: url("chrome-extension://__MSG_@@extension_id__/images/bg.png") repeat fixed; }
+.contents { padding: 0 5px 10px 5px; margin: 0 20px 40px 20px; border: 1px solid #DDD; border-radius: 6px; background-color: #FFF; }
