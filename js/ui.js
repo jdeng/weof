@@ -85,6 +85,8 @@ function ListController($scope, $route, $routeParams, $location, $timeout) {
   $scope.classes = {};
   $scope.authors = [];
 
+  $scope.uploadFile = null;
+
   $scope.revokeBlob = function(key) {
     var clz = $scope.classes[key];
     if (!clz) return;

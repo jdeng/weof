@@ -127,6 +127,46 @@ function AppController($scope, $timeout, $route){
 		controller.deleteFeeds(feeds);
 	};
 
+  $scope.handleFeeds = function(callback) {
+    var controller = $scope.feedController;
+    if (controller.isLoading()) {
+			alert('still loading');
+			return;
+		}
+
+		controller.loadFeeds(function(){ 
+      $scope.updateStatus();
+      console.log('loaded');
+//      $scope.saveFeeds();
+      $scope.status = "working...";
+			callback();
+
+      if (controller._error)
+        $scope.status = controller._error;
+
+      if (controller.hasNextPage()) {
+        controller.nextPage();
+        $scope.status = "going next page...";
+        $timeout(function() { $scope.handleFeeds(callback); }, 5000);
+      }
+    }, function(msg) {
+      $scope.updateStatus();
+      $scope.status = "loading...";
+		});
+	};
+
+	$scope.hideFeeds = function() {
+		$scope.handleFeeds(function() {
+    	var controller = $scope.feedController;
+			var feeds = [];
+			for (var i=0; i< controller.feeds.length; ++i) {
+				var feed = controller.feeds[i];
+				feeds.push(feed.mid);
+			}
+			controller.hideFeeds(feeds);
+		});
+	};
+
   $scope.updateStatus = function() {
     var controller = $scope.feedController;
     $scope.hasNextPage = controller.hasNextPage();
@@ -398,6 +438,14 @@ Controller.prototype.deleteFeeds = function(feeds) {
 	var _this = this;
 	var id = feeds.shift();
 	$.post('/aj/mblog/del?__rnd=' + Math.round((new Date()).getTime() / 1000), {'_t': 0, 'mid': id}, function() { _this.deleteFeeds(feeds); });
+}
+
+Controller.prototype.hideFeeds = function(feeds) {
+	if (! feeds.length) return false;
+
+	var _this = this;
+	var id = feeds.shift();
+	$.post('/p/aj/mblog/modifyvisible?_wv=5&__rnd=' + Math.round((new Date()).getTime() / 1000), {'visible': 1, '_t': 0, 'mid': id}, function() { _this.hideFeeds(feeds); });
 }
 
 Controller.prototype.loadFeeds = function(callback, progress, count) {
